@@ -10,22 +10,28 @@ module.exports.general = async(req, res) => {
 }
 
 module.exports.generalPatch = async(req, res) => {
-    if(req.file){
-        req.body.logo = `/uploads/${req.file.filename}`;
+    try {
+        if(req.file){
+            req.body.logo = `/uploads/${req.file.filename}`;
+        }
+    
+        const settingGeneral = await SettingGeneral.findOne({});
+    
+        if(!settingGeneral){
+            const record = new SettingGeneral(req.body);
+            await record.save();
+        } else {
+            await SettingGeneral.updateOne({
+                _id: settingGeneral.id
+            }, req.body);
+        }
+    
+        req.flash("success", "Cập nhật setting thành công!");
+    
+        res.redirect(`/${systemConfig.prefixAdmin}/dashboard`); 
+    } catch (error) {
+        res.render("client/pages/error/404", {
+            pageTitle: "404 Not Found",
+          });
     }
-
-    const settingGeneral = await SettingGeneral.findOne({});
-
-    if(!settingGeneral){
-        const record = new SettingGeneral(req.body);
-        await record.save();
-    } else {
-        await SettingGeneral.updateOne({
-            _id: settingGeneral.id
-        }, req.body);
-    }
-
-    req.flash("success", "Cập nhật setting thành công!");
-
-    res.redirect(`/${systemConfig.prefixAdmin}/dashboard`);
 }

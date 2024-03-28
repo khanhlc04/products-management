@@ -2,41 +2,62 @@ const Role = require('../../model/roles.model');
 const systemConfig = require('../../config/system');
 
 module.exports.index = async(req, res) => {
-    if(res.locals.role.permissions.includes("roles_view")){
-        const roles = await Role.find({deleted:false});
-        res.render('admin/pages/roles/index', {
-            pageTitle: "Trang nhóm quyền",
-            records: roles
-        })
-    } else {
-        req.flash("error", "Bạn không sở hữu quyền truy cập vào trang này!");
-        res.redirect("back");
+    try {
+        if(res.locals.role.permissions.includes("roles_view")){
+            const roles = await Role.find({deleted:false});
+            res.render('admin/pages/roles/index', {
+                pageTitle: "Trang nhóm quyền",
+                records: roles
+            })
+        } else {
+            req.flash("error", "Bạn không sở hữu quyền truy cập vào trang này!");
+            res.redirect("back");
+        }
+    } catch (error) {
+        res.render("client/pages/error/404", {
+            pageTitle: "404 Not Found",
+          });
     }
+    
 }
 
 module.exports.create = async(req, res) => {
-    if(res.locals.role.permissions.includes("roles_create")){
-        res.render('admin/pages/roles/create', {
-            pageTitle: "Thêm mới nhóm quyền"
-        })
-    } else {
-        req.flash("error", "Bạn không sở hữu quyền thực hiện chức năng này!");
-        res.redirect("back");
+    try {
+        if(res.locals.role.permissions.includes("roles_create")){
+            res.render('admin/pages/roles/create', {
+                pageTitle: "Thêm mới nhóm quyền"
+            })
+        } else {
+            req.flash("error", "Bạn không sở hữu quyền thực hiện chức năng này!");
+            res.redirect("back");
+        }
+    } catch (error) {
+        res.render("client/pages/error/404", {
+            pageTitle: "404 Not Found",
+          });
     }
+    
 }
 
 module.exports.createPost = async(req, res) => {
-    if(res.locals.role.permissions.includes("roles_create")){
-        const role = new Role(req.body);
-        await role.save();
-
-        req.flash("success", "Thêm mới nhóm quyền thành công!");
-
-        res.redirect(`/${systemConfig.prefixAdmin}/roles`);
-    } else {
-        req.flash("error", "Bạn không sở hữu quyền thực hiện chức năng này!");
-        res.redirect("back");
+    try {
+        if(res.locals.role.permissions.includes("roles_create")){
+            const role = new Role(req.body);
+            await role.save();
+    
+            req.flash("success", "Thêm mới nhóm quyền thành công!");
+    
+            res.redirect(`/${systemConfig.prefixAdmin}/roles`);
+        } else {
+            req.flash("error", "Bạn không sở hữu quyền thực hiện chức năng này!");
+            res.redirect("back");
+        }
+    } catch (error) {
+        res.render("client/pages/error/404", {
+            pageTitle: "404 Not Found",
+          });
     }
+    
 }
 
 module.exports.edit = async(req, res) => {

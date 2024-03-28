@@ -72,7 +72,6 @@ module.exports.createPost = async(req, res) => {
 }
 
 module.exports.edit = async (req, res) => {
-    try {
         if(res.locals.role.permissions.includes("accounts_create")){
             try {
                 const account = await Account.findOne({
@@ -96,14 +95,9 @@ module.exports.edit = async (req, res) => {
             req.flash("error", "Bạn không sở hữu quyền thực hiện chức năng này!");
             res.redirect("back");
         }
-    } catch (error) {
-        res.redirect("back");
-    }
-    
 };
   
 module.exports.editPatch = async (req, res) => {
-    try {
         if(res.locals.role.permissions.includes("accounts_create")){
             try {
                 const id = req.params.id;
@@ -132,7 +126,4 @@ module.exports.editPatch = async (req, res) => {
             req.flash("error", "Bạn không sở hữu quyền thực hiện chức năng này!");
             res.redirect("back");
         }
-    } catch (error) {
-        res.redirect("back");
-    }
 }
