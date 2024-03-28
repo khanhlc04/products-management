@@ -2,33 +2,40 @@ const Cart = require('../../model/carts.model');
 const Product = require('../../model/products.model');
 
 module.exports.index = async (req, res) => {
-    const cart = await Cart.findOne({
-        _id: req.cookies.cartId
-    })
-
-    if(cart){
-        cart.totalPrice = 0;
-        
-        for (const item of cart.products) {
-            const product = await Product.findOne({
-                deleted: false,
-                status: "active",
-                _id: item.product_id
-            }).select("thumbnail title slug price discountPercentage");
-            product.priceNew = (product.price * (100 - product.discountPercentage)/100).toFixed(0);
-  
-            item.productInfo = product;
+    try {
+        const cart = await Cart.findOne({
+            _id: req.cookies.cartId
+        })
+    
+        if(cart){
+            cart.totalPrice = 0;
+            
+            for (const item of cart.products) {
+                const product = await Product.findOne({
+                    deleted: false,
+                    status: "active",
+                    _id: item.product_id
+                }).select("thumbnail title slug price discountPercentage");
+                product.priceNew = (product.price * (100 - product.discountPercentage)/100).toFixed(0);
       
-            item.totalPrice = item.quantity * product.priceNew;
-      
-            cart.totalPrice += item.totalPrice;
+                item.productInfo = product;
+          
+                item.totalPrice = item.quantity * product.priceNew;
+          
+                cart.totalPrice += item.totalPrice;
+            }
         }
+    
+        res.render("client/pages/cart/index", {
+            pageTitle: "Giỏ hàng",
+            cartDetail: cart
+        });
+    } catch (error) {
+        res.render("client/pages/error/404", {
+            pageTitle: "404 Not Found",
+          });
     }
-
-    res.render("client/pages/cart/index", {
-        pageTitle: "Giỏ hàng",
-        cartDetail: cart
-    });
+    
 }
 
 module.exports.addPost = async (req, res) => {

@@ -2,7 +2,8 @@ const User = require('../../model/users.model');
 const usersSocket = require("../../sockets/client/users.socket");
 
 module.exports.notFriend = async(req, res) => {
-    usersSocket(res);
+    try {
+        usersSocket(res);
 
     const userId = res.locals.user.id;
     const requestFriends = res.locals.user.requestFriends;
@@ -24,10 +25,17 @@ module.exports.notFriend = async(req, res) => {
         pageTitle: "Danh sách người dùng",
         users: users
     })
+    } catch (error) {
+        res.render("client/pages/error/404", {
+            pageTitle: "404 Not Found",
+          });
+    }
+    
 }
 
 module.exports.request = async(req, res) => {
-    usersSocket(res);
+    try {
+        usersSocket(res);
 
     const requestFriends = res.locals.user.requestFriends;
 
@@ -43,10 +51,17 @@ module.exports.request = async(req, res) => {
         pageTitle: "Lời mời đã gửi",
         users: users
     })
+    } catch (error) {
+        res.render("client/pages/error/404", {
+            pageTitle: "404 Not Found",
+          }); 
+    }
+    
 }
 
 module.exports.accept = async(req, res) => {
-    usersSocket(res);
+    try {
+        usersSocket(res);
     
     const acceptFriends = res.locals.user.acceptFriends;
 
@@ -62,10 +77,17 @@ module.exports.accept = async(req, res) => {
         pageTitle: "Lời mời kết bạn",
         users: users
     })
+    } catch (error) {
+        res.render("client/pages/error/404", {
+            pageTitle: "404 Not Found",
+          });
+    }
+    
 }
 
 module.exports.friends = async(req, res) => {
-    usersSocket(res);
+    try {
+        usersSocket(res);
     
     const friendsList = res.locals.user.friendsList
     const friendsListId = friendsList.map(item => item.user_id)
@@ -87,4 +109,10 @@ module.exports.friends = async(req, res) => {
         pageTitle: "Danh sách bạn bè",
         users: users
     })
+    } catch (error) {
+        res.render("client/pages/error/404", {
+            pageTitle: "404 Not Found",
+          });
+    }
+    
 }

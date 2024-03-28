@@ -2,6 +2,7 @@ const User = require("../../model/users.model");
 const RoomChat = require("../../model/rooms-chat.model")
 
 module.exports.index = async (req, res) => {
+  try {
     const userId = res.locals.user.id;
 
     const listRoomChat = await RoomChat.find({
@@ -14,6 +15,12 @@ module.exports.index = async (req, res) => {
       pageTitle: "Danh sách phòng",
       listRoomChat: listRoomChat
     });
+  } catch (error) {
+    res.render("client/pages/error/404", {
+      pageTitle: "404 Not Found",
+    });
+  }
+    
 };
 
 module.exports.create = async (req, res) => {

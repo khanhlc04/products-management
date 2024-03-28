@@ -4,21 +4,28 @@ const ProductsCategory = require('../../model/products-category.model');
 const subCategoryHelper = require('../../helpers/sub-category.helper');
 
 module.exports.index = async (req, res) => {
-    const products = await Product.find({
-        status: "active",
-        deleted: false
-    }).sort({
-        position: "desc"
-    });
-
-    for(const item of products) {
-        item.newPrice = parseInt(item.price - item.price * item.discountPercentage / 100).toFixed(0);
+    try {
+        const products = await Product.find({
+            status: "active",
+            deleted: false
+        }).sort({
+            position: "desc"
+        });
+    
+        for(const item of products) {
+            item.newPrice = parseInt(item.price - item.price * item.discountPercentage / 100).toFixed(0);
+        }
+    
+        res.render('client/pages/products/index', {
+            pageTitle: "Danh sách sản phẩm",
+            products: products
+        });
+    } catch (error) {
+        res.render("client/pages/error/404", {
+            pageTitle: "404 Not Found",
+          });
     }
-
-    res.render('client/pages/products/index', {
-        pageTitle: "Danh sách sản phẩm",
-        products: products
-    });
+    
 }
 
 module.exports.detail = async (req, res) => {

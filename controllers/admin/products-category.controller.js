@@ -3,37 +3,46 @@ const ProductCategory = require('../../model/products-category.model');
 const createTreeHelper = require('../../helpers/create-tree.helper');
 
 module.exports.index = async (req, res) => {
-    if(res.locals.role.permissions.includes("products-category_view")){
-        const productsCategory = await ProductCategory.find({
-            deleted: false
-        })
-    
-        res.render('admin/pages/products-category/index',{
-            pageTitle: "Danh mục sản phẩm",
-            records: productsCategory
-        })
-    } else {
-        req.flash("error", "Bạn không sở hữu quyền truy cập vào trang này!");
+    try {
+        if(res.locals.role.permissions.includes("products-category_view")){
+            const productsCategory = await ProductCategory.find({
+                deleted: false
+            })
+        
+            res.render('admin/pages/products-category/index',{
+                pageTitle: "Danh mục sản phẩm",
+                records: productsCategory
+            })
+        } else {
+            req.flash("error", "Bạn không sở hữu quyền truy cập vào trang này!");
+            res.redirect("back");
+        }
+    } catch (error) {
         res.redirect("back");
     }
 }
 
 module.exports.create = async (req, res) => {
-    if(res.locals.role.permissions.includes("products-category_create")){
-        const productsCategory = await ProductCategory.find({
-            deleted: false
-        })
-
-        const records = createTreeHelper(productsCategory);
-
-        res.render('admin/pages/products-category/create', {
-            pageTitle: "Thêm mới danh mục sản phẩm",
-            records: records
-        })
-    } else {
-        req.flash("error", "Bạn không sở hữu quyền truy cập vào trang này!");
-        res.redirect("back");
+    try {
+        if(res.locals.role.permissions.includes("products-category_create")){
+            const productsCategory = await ProductCategory.find({
+                deleted: false
+            })
+    
+            const records = createTreeHelper(productsCategory);
+    
+            res.render('admin/pages/products-category/create', {
+                pageTitle: "Thêm mới danh mục sản phẩm",
+                records: records
+            })
+        } else {
+            req.flash("error", "Bạn không sở hữu quyền truy cập vào trang này!");
+            res.redirect("back");
+        }
+    } catch (error) {
+        res.redirect("back")
     }
+    
 }
 
 module.exports.createPost = async (req, res) => {

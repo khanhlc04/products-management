@@ -5,7 +5,8 @@ const chatSocket = require("../../sockets/client/chat.socket");
 
 
 module.exports.index = async(req, res) => {
-    const roomChatId = req.params.roomChatId;
+    try {
+        const roomChatId = req.params.roomChatId;
 
     chatSocket(req, res);
 
@@ -26,5 +27,11 @@ module.exports.index = async(req, res) => {
         pageTitle: "Chat",
         chats: chats
     })
+    } catch (error) {
+        res.render("client/pages/error/404", {
+            pageTitle: "404 Not Found",
+          });
+    }
+    
 }
 
