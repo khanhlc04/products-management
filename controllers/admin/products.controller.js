@@ -230,9 +230,9 @@ module.exports.createPost = async (req, res) => {
                 req.body.position = parseInt(req.body.position);
             }
             
-            if(req.file){
-                req.body.thumbnail = `/uploads/${req.file.filename}`;
-            }
+            // if(req.file){
+            //     req.body.thumbnail = `/uploads/${req.file.filename}`;
+            // }
 
             req.body.createdBy = {
                 accountId: res.locals.user.id,
@@ -289,9 +289,9 @@ module.exports.editPatch = async (req, res) => {
             req.body.discountPercentage = parseInt(req.body.discountPercentage);
             req.body.stock = parseInt(req.body.stock);
 
-            if(req.file){
-                req.body.thumbnail = `/uploads/${req.file.filename}`;
-            }
+            // if(req.file){
+            //     req.body.thumbnail = `/uploads/${req.file.filename}`;
+            // }
 
             const objectUpdatedBy = {
                 accountId: res.locals.user.id,
