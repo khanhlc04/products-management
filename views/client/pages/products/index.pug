@@ -19,8 +19,9 @@ block main
                                 a(href=`/products/detail/${item.slug}`)
                                     h3.inner-title #{item.title}
                                 .inner-price-new #{item.newPrice}$
-                                .inner-price-old #{item.price}$
-                                .inner-discount #{item.discountPercentage}
+                                if(item.discountPercentage > 0 )
+                                    .inner-price-old #{item.price}$
+                                    .inner-discount -#{item.discountPercentage}%
             else
                 div(class="col-12")
                     div(class="alert alert-danger") Không tìm thấy sản phẩm nào.
